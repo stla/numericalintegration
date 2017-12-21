@@ -1,0 +1,33 @@
+name:                numericalintegration
+version:             0.1.0.0
+homepage:            https://github.com/stla/numericalintegration#readme
+license:             GPL-3
+author:              Stéphane Laurent
+maintainer:          laurent_step@yahoo.fr
+copyright:           2017 Stéphane Laurent
+category:            Web
+build-type:          Simple
+extra-source-files:  README.md
+cabal-version:       >=1.10
+
+library
+  hs-source-dirs:      src
+  exposed-modules:     Integration
+  build-depends:       base >= 4.7 && < 5
+  default-language:    Haskell2010
+  include-dirs:        CPP
+  C-sources:           CPP/integration.cpp
+  extra-libraries:     stdc++
+
+executable testintegration
+  buildable:           True
+  hs-source-dirs:      src-exec
+  main-is:             Main.hs
+  default-language:    Haskell2010
+  build-depends:       base >= 4.7 && < 5
+                     , numericalintegration
+  ghc-options:         -optl-static -optl-lstdc++
+
+source-repository head
+  type:     git
+  location: https://github.com/stla/numericalintegration
