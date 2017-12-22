@@ -1,9 +1,9 @@
 {-# LANGUAGE ForeignFunctionInterface #-}
 module Integration
   where
-import           Foreign.Marshal.Alloc (free, malloc)
+import           Foreign.Marshal.Alloc (free, mallocBytes)
 import           Foreign.Ptr           (FunPtr, Ptr, freeHaskellFunPtr)
-import           Foreign.Storable      (peek)
+import           Foreign.Storable      (peek, sizeOf)
 
 foreign import ccall safe "wrapper" funPtr
     :: (Double -> Double) -> IO(FunPtr (Double -> Double))
@@ -19,8 +19,8 @@ integration :: (Double -> Double)       -- integrand
             -> Int                      -- number of subdivisions
             -> IO (Double, Double, Int) -- value, error estimate, error code
 integration f lower upper relError subdiv = do
-  errorEstimatePtr <- malloc
-  errorCodePtr <- malloc
+  errorEstimatePtr <- mallocBytes (sizeOf (0 :: Double))
+  errorCodePtr <- mallocBytes (sizeOf (0 :: Int))
   fPtr <- funPtr f
   result <-
     c_integration fPtr lower upper relError subdiv errorEstimatePtr errorCodePtr
